@@ -10,6 +10,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+
+app.get("/", (req, res) => {
+    res.send("Bulk Mail Backend is running ");
+});
+
 // MongoDB Connection
 mongoose.connect("mongodb+srv://rithu:123@cluster-app.9laepuq.mongodb.net/passkey?appName=Cluster-app") 
 .then(() => console.log("MongoDB Connected"))
@@ -114,6 +119,6 @@ app.get("/history", async (req, res) => {
 // Server
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server Running on Port ${PORT}`);
-});
+}); 
