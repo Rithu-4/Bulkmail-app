@@ -18,7 +18,7 @@ function App() {
     try {
 
       const res = await axios.post(
-        "http://localhost:5000/sendemail",
+        "https://bulkmail-app-l9g6.onrender.com/sendemail",
         {
           subject,
           message,

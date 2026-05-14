@@ -11,10 +11,9 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB Connection
-mongoose.connect("mongodb+srv://rithu:123@cluster-app.9laepuq.mongodb.net/passkey?appName=Cluster-app")
+mongoose.connect("mongodb+srv://rithu:123@cluster-app.9laepuq.mongodb.net/passkey?appName=Cluster-app") 
 .then(() => console.log("MongoDB Connected"))
-.catch((err) => console.log(err));
-
+.catch((err) => console.log("MongoDB Error:", err));
 // Schema
 const emailSchema = new mongoose.Schema({
     subject: String,
@@ -113,6 +112,8 @@ app.get("/history", async (req, res) => {
 });
 
 // Server
-app.listen(5000, () => {
-    console.log("Server Running on Port 5000");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server Running on Port ${PORT}`);
 });
