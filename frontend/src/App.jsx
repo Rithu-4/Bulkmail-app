@@ -3,22 +3,29 @@ import axios from "axios";
 import "./App.css";
 
 function App() {
-
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [emails, setEmails] = useState("");
   const [status, setStatus] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const sendMail = async () => {
-
     const recipientArray = emails
       .split(",")
-      .map(email => email.trim());
+      .map(email => email.trim())
+      .filter(email => email !== "");
+
+    if (!subject || !message || recipientArray.length === 0) {
+      setStatus(" Please fill all fields correctly");
+      return;
+    }
 
     try {
+      setLoading(true);
+      setStatus("Sending emails...");
 
       const res = await axios.post(
-        "https://bulkmail-app-l9g6.onrender.com/sendemail",
+        "https://bulkmail-app-1-b34h.onrender.com/sendemail",
         {
           subject,
           message,
@@ -26,26 +33,32 @@ function App() {
         }
       );
 
+      console.log("Response:", res.data);
+
       if (res.data.success) {
-
-        setStatus("Emails Sent Successfully");
-
+        setStatus(" Emails Sent Successfully");
+        setSubject("");
+        setMessage("");
+        setEmails("");
       } else {
-
-        setStatus("Failed to Send Emails");
+        setStatus(" Failed to Send Emails");
       }
 
     } catch (error) {
+      console.log("Error:", error);
 
-      console.log(error);
+      if (error.response) {
+        console.log("Backend Error:", error.response.data);
+      }
 
-      setStatus("Server Error");
+      setStatus("❌ Server Error / Network Issue");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="container">
-
       <h1>Bulk Mail Application</h1>
 
       <input
@@ -67,12 +80,11 @@ function App() {
         onChange={(e) => setEmails(e.target.value)}
       ></textarea>
 
-      <button onClick={sendMail}>
-        Send Emails
+      <button onClick={sendMail} disabled={loading}>
+        {loading ? "Sending..." : "Send Emails"}
       </button>
 
       <p>{status}</p>
-
     </div>
   );
 }
